@@ -13,11 +13,11 @@ class DummyCommand(Command):
         self.db.get_metadata().drop_all()
         self.db.get_metadata().create_all()
 
-        jg_name = u'JobGroup-Dummy'
-        jg_ukey = unicode(self.cf['env.uniqkey'], "utf-8")
-        j_name = u'Job-Dummy'
+        jg_name = 'JobGroup-Dummy'
+        jg_ukey = str(self.cf['env.uniqkey'], "utf-8")
+        j_name = 'Job-Dummy'
         j_order = 0
-        j_cmd = unicode( os.path.dirname(__file__) + "/dummy.py", "utf-8")
+        j_cmd = str( os.path.dirname(__file__) + "/dummy.py", "utf-8")
         jg = JobGroup(jg_name, jg_ukey)
         jg.jobs.append(Job(j_name, j_order, j_cmd))
         self.session.save(jg)

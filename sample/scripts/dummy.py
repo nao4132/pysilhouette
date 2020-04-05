@@ -9,7 +9,7 @@ class DummyCommand(Command):
 
     def process(self):
         import time
-        for x in xrange(0, 10):
+        for x in range(0, 10):
             time.sleep(1)
             self.up_progress(10)
             

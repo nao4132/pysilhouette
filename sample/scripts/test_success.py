@@ -11,5 +11,5 @@ if __name__ == '__main__':
     fp.write('Success!!\n')
     fp.close()
     os.unlink(fpath)
-    print >>sys.stdout, 'stdout : Success!!'
+    print('stdout : Success!!', file=sys.stdout)
     sys.exit(0)

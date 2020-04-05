@@ -47,8 +47,8 @@ from optparse import OptionParser, OptionValueError
 try:
     import sqlalchemy
     import pysilhouette
-except ImportError, e:
-    print >>sys.stderr, "".join(e.args)
+except ImportError as e:
+    print("".join(e.args), file=sys.stderr)
     sys.exit(1)
 
 import warnings
@@ -83,8 +83,8 @@ def is_connect(url):
         connection = engine.connect()
         connection.close()
         return True
-    except Exception, e:
-        print >>sys.stderr, "[Error] connection refused - %s" % str(e.args)
+    except Exception as e:
+        print("[Error] connection refused - %s" % str(e.args), file=sys.stderr)
         return False
 
 def getopts():
@@ -97,21 +97,19 @@ def getopts():
 
 def chkopts(opts):
     if not opts.input:
-        print >>sys.stderr, "sqlite2other: --input or -i is required."
+        print("sqlite2other: --input or -i is required.", file=sys.stderr)
         return True
     else:
         if is_connect(opts.input) is False:
-            print >>sys.stderr, \
-                  "sqlite2other:bind-url \"--input\" is invalid. - input=%s" % opts.input
+            print("sqlite2other:bind-url \"--input\" is invalid. - input=%s" % opts.input, file=sys.stderr)
             return True
 
     if not opts.output:
-        print >>sys.stderr, "sqlite2other: --output or -o is required."
+        print("sqlite2other: --output or -o is required.", file=sys.stderr)
         return True        
     else:
         if is_connect(opts.output) is False:
-            print >>sys.stderr, \
-            "sqlite2other:bind-url \"--output\" is invalid. - output=%s" % opts.output
+            print("sqlite2other:bind-url \"--output\" is invalid. - output=%s" % opts.output, file=sys.stderr)
             return True
 
     return False
@@ -142,8 +140,8 @@ def main():
 
         reload_mappers(output_db.get_metadata())
 
-    except Exception, e:
-        print >>sys.stderr, 'Initializing a database error'
+    except Exception as e:
+        print('Initializing a database error', file=sys.stderr)
         raise
 
     try:
@@ -190,16 +188,16 @@ def main():
     try:
         output_db.get_metadata().drop_all()
         output_db.get_metadata().create_all()
-        print >>sys.stdout, 'Cleanup Database [OK]'
+        print('Cleanup Database [OK]', file=sys.stdout)
         output_session = output_db.get_session()
         for j in output_jobgroups:
             #import pdb; pdb.set_trace()
             output_session.save(j)
         output_session.commit()
-        print >>sys.stderr, 'copy num - %d' % len(output_jobgroups)
+        print('copy num - %d' % len(output_jobgroups), file=sys.stderr)
         
-    except Exception,e:
-        print >>sys.stderr, 'database drop and create error.'
+    except Exception as e:
+        print('database drop and create error.', file=sys.stderr)
         raise
 
 

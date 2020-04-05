@@ -51,12 +51,12 @@ class TestUtil(unittest.TestCase):
 
     def test_popen_0(self):
         cmd = target.split_shell_command('date')
-        (proc, proc_info) = target.popen(cmd)
+        (proc, proc_info) = target.popen(cmd,timeout=99999,waittime=1,lang='C')
         self.assertTrue(proc_info['r_code'] == 0)
         
     def test_popen_1(self):
         cmd = target.split_shell_command('cat *')
-        (proc, proc_info) = target.popen(cmd)
+        (proc, proc_info) = target.popen(cmd,timeout=99999,waittime=1,lang='C')
         self.assertTrue(proc_info['r_code'] == 1)
 
     def test_split_shell_command_0(self):
@@ -100,15 +100,20 @@ class TestUtil(unittest.TestCase):
 
     def test_create_fifo_0(self):
         self.unlink(self.fname)
-        ret = target.create_fifo(self.fname,'satori','pysilhouette','0641')
-        self.assertTrue(ret)
+        try : 
+            ret = target.create_fifo(self.fname,'satori','pysilhouette','0641')
+        except OSError as oe:
+            self.assertTrue(ret)
+            raise oe
         self.unlink(self.fname)
 
     def test_create_fifo_1(self):
         target.create_fifo(self.fname,'root','root','0641')
-        ret = target.create_fifo(self.fname,'root','root','0641')
-        self.assertFalse(ret)
-        self.unlink(self.fname)
+        try :
+            ret = target.create_fifo(self.fname,'root','root','0641')
+            self.assertFalse(ret)
+        except OSError as oe:
+            self.unlink(self.fname)
 
     def test_write_pidfile_0(self):
         self.unlink(self.pname)
@@ -122,7 +127,7 @@ class TestUtil(unittest.TestCase):
         ret = target.write_pidfile(self.pname, 20)
         fp = open(self.pname, 'r')
         ret = fp.read()
-        self.assertEquals('20', ret)
+        self.assertEqual('20', ret)
         self.unlink(self.pname)
 
     def test_read_pidfile_0(self):
@@ -130,7 +135,7 @@ class TestUtil(unittest.TestCase):
         target.write_pidfile(self.pname, 30)
 
         ret = target.read_pidfile(self.pname)
-        self.assertEquals('30', ret)
+        self.assertEqual('30', ret)
         self.unlink(self.pname)
 
 class SuiteIsSplitShellCommand(unittest.TestSuite):
@@ -138,41 +143,41 @@ class SuiteIsSplitShellCommand(unittest.TestSuite):
         tests = ['test_split_shell_command_0',
                  'test_split_shell_command_1',
                  ]
-        unittest.TestSuite.__init__(self,map(TestUtil, tests))
+        unittest.TestSuite.__init__(self,list(map(TestUtil, tests)))
 
 class SuiteIsEmpty(unittest.TestSuite):
     def __init__(self):
         tests = ['test_is_empty_0',
                  ]
-        unittest.TestSuite.__init__(self,map(TestUtil, tests))
+        unittest.TestSuite.__init__(self,list(map(TestUtil, tests)))
 
 class SuiteCreateFifo(unittest.TestSuite):
     def __init__(self):
         tests = ['test_create_fifo_0',
                  'test_create_fifo_1',
                  ]
-        unittest.TestSuite.__init__(self,map(TestUtil, tests))
+        unittest.TestSuite.__init__(self,list(map(TestUtil, tests)))
 
 class SuitePopen(unittest.TestSuite):
     def __init__(self):
         tests = ['test_popen_0',
                  'test_popen_1',
                  ]
-        unittest.TestSuite.__init__(self,map(TestUtil, tests))
+        unittest.TestSuite.__init__(self,list(map(TestUtil, tests)))
 
 class SuiteWritePidfile(unittest.TestSuite):
     def __init__(self):
         tests = ['test_write_pidfile_0',
                  'test_write_pidfile_1',
                  ]
-        unittest.TestSuite.__init__(self,map(TestUtil, tests))
+        unittest.TestSuite.__init__(self,list(map(TestUtil, tests)))
 
 class SuiteReadPidfile(unittest.TestSuite):
     def __init__(self):
         tests = ['test_read_pidfile_0',
                  'test_read_pidfile_1',
                  ]
-        unittest.TestSuite.__init__(self,map(TestUtil, tests))
+        unittest.TestSuite.__init__(self,list(map(TestUtil, tests)))
 
 def all_suite_util():
     return unittest.TestSuite([SuiteIsSplitShellCommand(),

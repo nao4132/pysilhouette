@@ -7,7 +7,7 @@
 
 name=pysilhouette
 PATH=${PATH}:/usr/bin
-export PYTHONPATH=${PYTHONPATH}:/usr/lib/python:/usr/lib/python2.6:/usr/lib/python2.6/site-packages
+export PYTHONPATH=${PYTHONPATH}:/usr/lib/python:/usr/lib/python3.6:/usr/lib/python3.6/site-packages
 
 script_dir=`dirname $0`
 pushd $script_dir >/dev/null 2>&1

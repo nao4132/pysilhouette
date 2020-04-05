@@ -6,3 +6,6 @@
 *.old
 *.orig
 *.swp
+build
+dist
+pysilhouette.egg-info

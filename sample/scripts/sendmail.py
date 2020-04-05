@@ -60,26 +60,26 @@ def getopts():
 
 def chkopts(opts):
     if not opts.ofrom:
-        print >>sys.stderr, 'sendmail: --from is required.'
+        print('sendmail: --from is required.', file=sys.stderr)
         return True
     if not opts.oto:
-        print >>sys.stderr, 'sendmail: --to is required.'
+        print('sendmail: --to is required.', file=sys.stderr)
         return True
     if not opts.osubject:
-        print >>sys.stderr, 'sendmail: --subject is required.'
+        print('sendmail: --subject is required.', file=sys.stderr)
         return True
     if not opts.omsg and not opts.obodyfile:
-        print >>sys.stderr, 'sendmail: --msg or --bodyfile are required.'
+        print('sendmail: --msg or --bodyfile are required.', file=sys.stderr)
         return True
     if not opts.omsg and opts.obodyfile:
         if not os.path.exists(opts.obodyfile):
-            print >>sys.stderr, 'sendmail: --bodyfile specified in the file does not exist.'
+            print('sendmail: --bodyfile specified in the file does not exist.', file=sys.stderr)
             return True
     if not opts.ohostname:
-        print >>sys.stderr, 'sendmail: --hostname is required.'
+        print('sendmail: --hostname is required.', file=sys.stderr)
         return True
     if not opts.oport:
-        print >>sys.stderr, 'sendmail: --port is required.'
+        print('sendmail: --port is required.', file=sys.stderr)
         return True
     if not opts.ocharset:
         opts.ocharset = charset
@@ -91,12 +91,12 @@ def chkopts(opts):
 def sendmail(opts):
     if opts.obodyfile:
         fp = open(opts.obodyfile, 'r')
-        body = unicode(fp.read(), opts.oencode).encode(opts.ocharset,'replace')
+        body = str(fp.read(), opts.oencode).encode(opts.ocharset,'replace')
     else:
-        body = unicode(opts.omsg, opts.oencode).encode(opts.ocharset,'replace')
+        body = str(opts.omsg, opts.oencode).encode(opts.ocharset,'replace')
 
     msg = MIMEText(body, 'plain', opts.ocharset)
-    msg['Subject'] = Header(unicode(opts.osubject, opts.oencode), opts.ocharset)
+    msg['Subject'] = Header(str(opts.osubject, opts.oencode), opts.ocharset)
     msg['From'] = opts.ofrom
     msg['To'] = opts.oto
     msg['Date'] = formatdate()
